@@ -11,7 +11,8 @@ public class JDBCMainApplication {
 		System.out.println("This application will talk about jdbc..!");
 		JDBCBasicExplainer jdbcExplainer = new JDBCBasicExplainer();
 		jdbcExplainer.executeBasicDBOperations();
-
+		//jdbcExplainer.SQLInjectionAttackDemo();
+		jdbcExplainer.PreparedStatementDemo();
 	}
 
 }
