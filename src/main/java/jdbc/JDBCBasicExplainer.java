@@ -10,6 +10,18 @@ public class JDBCBasicExplainer {
 	String userName = "root";
 	String password = "bAsics@2022";
 	
+	//Queries
+	String selectionQueryString = "select * from employees";
+	String insertionQueryString = "insert into employees (empName,address,deptId) values (\"Malliga\",\"Trichy\",\"103\")";
+	
+	//Get the empId after above insertionString been executed because update/delete been happening only with primarykey attribute
+	String updateQueryString = "update employees set empName=\"Mallika\" where empId=1007";
+	String deletionQueryString = "delete from employees where empId=1007";
+		
+	//PreparedStatement
+	String updateQueryForPreparedStatment = "update employees set empName =? where empId = ?";
+	
+	
 	/**
 	 * This method is for doing basic CRUD operations on MySQL db.
 	 * prerequisite: Make sure you have included jdbc connector in the project's CLASSPATH;
@@ -28,23 +40,18 @@ public class JDBCBasicExplainer {
 		//executeQuery for select statements
 		executeSelectStatement(stmt);
 		
-		boolean insertUpdateDeleteValue = false;
-		String insertionString = "insert into employees (empName,address,deptId) values (\"Malliga\",\"Trichy\",\"103\")";
-		
-		//Get the empId after above insertionString been executed because update/delete been happening only with primarykey attribute
-		String updateString = "update employees set empName=\"Mallika\" where empId=1007";
-		String deletionString = "delete from employees where empId=1007";
+		boolean insertUpdateDeleteValue = false;	
 		
 		if(insertUpdateDeleteValue) {
-			int rowsAffected = stmt.executeUpdate(insertionString);		//executeUpdate for CUD operations (DML) or DDL operations
+			int rowsAffected = stmt.executeUpdate(insertionQueryString);		//executeUpdate for CUD operations (DML) or DDL operations
 			System.out.println("\nRows Affected after insertion: "+rowsAffected);
 			executeSelectStatement(stmt);
 			
-			rowsAffected = stmt.executeUpdate(updateString);
+			rowsAffected = stmt.executeUpdate(updateQueryString);
 			System.out.println("\nRows Affected after update: "+rowsAffected);
 			executeSelectStatement(stmt);
 			
-			rowsAffected = stmt.executeUpdate(deletionString);
+			rowsAffected = stmt.executeUpdate(deletionQueryString);
 			System.out.println("\nRows Affected after delete: "+rowsAffected);
 			executeSelectStatement(stmt);
 
@@ -53,11 +60,11 @@ public class JDBCBasicExplainer {
 	
 	private void executeSelectStatement(Statement stmt) throws SQLException {
 		
-		ResultSet resultSet = stmt.executeQuery("select * from employees");		//executeQuery for select statements
+		ResultSet resultSet = stmt.executeQuery(selectionQueryString);		//executeQuery for select statements
 		
-		System.out.println("Printing employees' name:");
+		System.out.println("\n\nPrinting employees' details:\n");
 		while(resultSet.next()) {
-			System.out.println(resultSet.getString("empName"));
+			System.out.println(resultSet.getInt("empId")+","+resultSet.getString("empName")+","+resultSet.getString("address")+","+resultSet.getString("deptId"));
 		}
 	}
 	
@@ -65,7 +72,7 @@ public class JDBCBasicExplainer {
 		
 		String maliciousString = "\"Mrs.Latha\" --";	//-- simply ignores following statments.. thus updating all the records in the table
 		String updateString = "update employees set empName="+maliciousString+" where empId=1";
-		Connection dbConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/college", "root", "bAsics@2022");
+		Connection dbConn = DriverManager.getConnection(dbConnection, userName, password);
 		Statement stmt = dbConn.createStatement();
 		
 		System.out.println("updated query string : "+updateString);
@@ -83,10 +90,9 @@ public class JDBCBasicExplainer {
 	 * @throws SQLException
 	 */
 	public void PreparedStatementDemo() throws SQLException{
-		
-		String updateQueryString = "update employees set empName =? where empId = ?";
-		Connection dbConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/college", "root", "bAsics@2022");
-		PreparedStatement stmt = dbConn.prepareStatement(updateQueryString);
+				
+		Connection dbConn = DriverManager.getConnection(dbConnection, userName, password);
+		PreparedStatement stmt = dbConn.prepareStatement(updateQueryForPreparedStatment);
 		
 		stmt.setString(1, "\"Mrs.Latha\" --");
 		stmt.setInt(2, 1);

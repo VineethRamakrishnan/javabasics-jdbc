@@ -12,7 +12,7 @@ public class JDBCMainApplication {
 		JDBCBasicExplainer jdbcExplainer = new JDBCBasicExplainer();
 		jdbcExplainer.executeBasicDBOperations();
 		//jdbcExplainer.SQLInjectionAttackDemo();
-		jdbcExplainer.PreparedStatementDemo();
+		//jdbcExplainer.PreparedStatementDemo();
 	}
 
 }
